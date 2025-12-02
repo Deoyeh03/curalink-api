@@ -1,0 +1,53 @@
+services:
+  - type: web
+    name: curalink-backend
+    env: node
+    rootDir: .
+    buildCommand: "npm install"
+    startCommand: "node src/server.js"
+    plan: free
+    autoDeploy: true
+    region: frankfurt  # change to your nearest region
+    healthCheckPath: "/health"
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+      - key: PORT
+        value: 10000  # Render sets PORT automatically; your app should use process.env.PORT
+
+      - key: MONGODB_URI
+        sync: false   # Set in dashboard (Atlas connection string)
+
+      - key: JWT_SECRET
+        sync: false
+
+      - key: JWT_REFRESH_SECRET
+        sync: false
+
+      - key: OPENAI_API_KEY
+        sync: false   # optional if using mock AI
+
+      - key: USE_MOCK_AI
+        value: "false"
+
+      - key: CORS_ORIGIN
+        value: "https://your-frontend-domain.com"
+
+      - key: RATE_LIMIT_WINDOW
+        value: "900000" # 15 minutes
+
+      - key: RATE_LIMIT_MAX
+        value: "100"
+
+      - key: AI_RATE_LIMIT_MAX
+        value: "50"
+
+databases:
+  - name: curalink-db
+    region: frankfurt
+    plan: free
+    databaseName: curalink
+    type: mongodb
+    # Render-managed MongoDB has a connection string you can reference:
+    # MONGODB_URI: ${databases.curalink-db.connectionString}
