@@ -7,17 +7,19 @@ services:
     startCommand: "node src/server.js"
     plan: free
     autoDeploy: true
-    region: frankfurt  # change to your nearest region
+    region: frankfurt
     healthCheckPath: "/health"
+
     envVars:
       - key: NODE_ENV
         value: production
 
       - key: PORT
-        value: 10000  # Render sets PORT automatically; your app should use process.env.PORT
+        value: 10000
 
+      # --- Required Secrets (set manually in Render Dashboard) ---
       - key: MONGODB_URI
-        sync: false   # Set in dashboard (Atlas connection string)
+        sync: false
 
       - key: JWT_SECRET
         sync: false
@@ -26,8 +28,9 @@ services:
         sync: false
 
       - key: OPENAI_API_KEY
-        sync: false   # optional if using mock AI
+        sync: false
 
+      # --- Optional ---
       - key: USE_MOCK_AI
         value: "false"
 
@@ -35,19 +38,10 @@ services:
         value: "https://your-frontend-domain.com"
 
       - key: RATE_LIMIT_WINDOW
-        value: "900000" # 15 minutes
+        value: "900000"
 
       - key: RATE_LIMIT_MAX
         value: "100"
 
       - key: AI_RATE_LIMIT_MAX
         value: "50"
-
-databases:
-  - name: curalink-db
-    region: frankfurt
-    plan: free
-    databaseName: curalink
-    type: mongodb
-    # Render-managed MongoDB has a connection string you can reference:
-    # MONGODB_URI: ${databases.curalink-db.connectionString}
